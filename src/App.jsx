@@ -110,7 +110,8 @@ const LINKS = [
     desc: 'Habilidades en desarrollo frontend y backend, y trayectoria con tecnologías modernas.',
     cta: 'Ver portafolio',
     icon: Briefcase,
-    href: '#',
+    href: 'https://portafolio-lime-iota.vercel.app', // <-- Enlace añadido aquí
+    external: true,
   },
   {
     id: 'spa',
@@ -195,7 +196,7 @@ export default function App() {
         }
       `}</style>
 
-      {/* Skip link — keyboard/screen-reader accessibility */}
+      {/* Skip link */}
       <a
         href="#inicio"
         className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-full focus:bg-indigo-500 focus:text-white text-sm font-medium"
@@ -281,7 +282,7 @@ export default function App() {
         </Reveal>
       </main>
 
-      {/* QR / linktree hub — signature element */}
+      {/* QR / linktree hub */}
       <section id="acceso-rapido" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pb-8 scroll-mt-24">
         <Reveal>
           <div
@@ -324,7 +325,7 @@ export default function App() {
         </Reveal>
       </section>
 
-      {/* Link grid */}
+      {/* Link grid (Ahora SEPARADO y estructurado de forma espaciada) */}
       <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <Reveal className="text-center mb-12 sm:mb-14">
           <h2 className={`text-2xl sm:text-3xl md:text-5xl font-bold ${t.heading} tracking-tight mb-4`}>
@@ -333,61 +334,68 @@ export default function App() {
           <p className={t.muted}>Documentación técnica, testimonios y recursos del desarrollo.</p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 auto-rows-[minmax(220px,auto)]">
-          <div className="flex flex-col gap-5 sm:gap-6">
+        <div className="flex flex-col gap-10 sm:gap-14">
+          
+          {/* Parte 1: Proyectos - Portafolio y SPA */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 auto-rows-[minmax(220px,auto)]">
             {[LINKS[0], LINKS[1]].map((item, i) => (
-              <Reveal key={item.id} delay={i * 100} className="flex-1">
+              <Reveal key={item.id} delay={i * 100}>
                 <LinkCard item={item} t={t} focusRing={focusRing} />
               </Reveal>
             ))}
           </div>
 
-          <Reveal className="md:row-span-2">
+          {/* Parte 2: Video Testimonial - Separado como un banner central */}
+          <Reveal delay={200}>
             <a
               href="#"
-              className={`group relative rounded-[2rem] border ${t.borderSoft} overflow-hidden h-[440px] sm:h-[520px] md:h-full flex flex-col justify-between p-6 sm:p-8 touch-manipulation ${focusRing}`}
+              className={`group relative rounded-[2rem] border ${t.borderSoft} overflow-hidden flex flex-col justify-end p-8 sm:p-12 min-h-[350px] md:min-h-[420px] touch-manipulation ${focusRing} transition-all duration-300 hover:border-indigo-500/50`}
               style={{ backgroundColor: t.surface }}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none" />
               <img
                 src="https://images.unsplash.com/photo-1618042164219-62c820f10723?q=80&w=1000&auto=format&fit=crop"
                 alt="Fondo video testimonial"
-                className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-35 transition-opacity duration-500"
+                className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500"
                 loading="lazy"
               />
 
-              <div className="relative z-20 flex items-center gap-3 font-mono-hud">
-                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center">
-                  <Play className="w-3.5 h-3.5 text-white fill-white" />
+              <div className="relative z-20 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="max-w-2xl">
+                  <div className="flex items-center gap-3 font-mono-hud mb-4">
+                    <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center">
+                      <Play className="w-4 h-4 text-white fill-white" />
+                    </div>
+                    <span className="text-white text-xs tracking-[0.2em] uppercase drop-shadow-md">
+                      Video Testimonial
+                    </span>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 drop-shadow-lg leading-tight">
+                    ¿Por qué es vital la toma correcta de requerimientos?
+                  </h3>
+                  <p className="text-slate-300 text-sm sm:text-base drop-shadow-md max-w-xl">
+                    Un análisis sobre cómo la correcta extracción de datos previene pérdidas
+                    silenciosas y asegura la viabilidad técnica.
+                  </p>
                 </div>
-                <span className="text-white text-xs tracking-[0.15em] uppercase drop-shadow-md">
-                  Video Testimonial
-                </span>
-              </div>
-
-              <div className="relative z-20">
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 drop-shadow-lg">
-                  ¿Por qué es vital la toma correcta de requerimientos?
-                </h3>
-                <p className="text-slate-300 text-sm mb-6 drop-shadow-md">
-                  Un análisis sobre cómo la correcta extracción de datos previene pérdidas
-                  silenciosas y asegura la viabilidad técnica.
-                </p>
-                <span className="w-full inline-flex items-center justify-center gap-2 py-4 bg-white/10 group-hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold rounded-2xl transition-colors">
-                  <Play className="w-4 h-4 text-red-500 fill-red-500" />
-                  Reproducir
+                
+                <span className="shrink-0 w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 bg-white/10 group-hover:bg-indigo-600 backdrop-blur-md border border-white/20 text-white font-bold rounded-2xl transition-all duration-300">
+                  <Play className="w-4 h-4 text-white fill-white group-hover:text-white" />
+                  Reproducir Video
                 </span>
               </div>
             </a>
           </Reveal>
 
-          <div className="flex flex-col gap-5 sm:gap-6">
+          {/* Parte 3: Documentación - SRS y Video Tutorial */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 auto-rows-[minmax(220px,auto)]">
             {[LINKS[2], LINKS[3]].map((item, i) => (
-              <Reveal key={item.id} delay={i * 100} className="flex-1">
+              <Reveal key={item.id} delay={i * 100}>
                 <LinkCard item={item} t={t} focusRing={focusRing} />
               </Reveal>
             ))}
           </div>
+
         </div>
       </section>
 
