@@ -1,116 +1,441 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Briefcase,
+  PlayCircle,
+  FileText,
+  Rocket,
+  Play,
+  ArrowUpRight,
+  QrCode,
+  Sun,
+  Moon,
+} from 'lucide-react';
 
-export default function LandingPage() {
-  // Aquí defines todos los enlaces que anotaste en el pizarrón
-  const links = [
-    {
-      id: 1,
-      title: "Portafolio Profesional",
-      description: "Explora mis proyectos, habilidades y trayectoria.",
-      icon: "",
-      url: "#", // Reemplaza con el link a tu portafolio
-      gradient: "from-blue-500 to-cyan-400"
-    },
-    {
-      id: 2,
-      title: "StayMX (SPA)",
-      description: "Single Page Application de alojamientos en México.",
-      icon: "",
-      url: "https://staymx-sigma.vercel.app", 
-      gradient: "from-rose-500 to-orange-400"
-    },
-    {
-      id: 3,
-      title: "Documento SRS Completo",
-      description: "Especificación de Requerimientos de Software (SharePoint/Sites).",
-      icon: "",
-      url: "#", // Reemplaza con el link de SharePoint
-      gradient: "from-emerald-500 to-teal-400"
-    },
-    {
-      id: 4,
-      title: "Video Testimonial",
-      description: "¿Por qué es vital la toma correcta de requerimientos?",
-      icon: "",
-      url: "#", // Reemplaza con el link de tu video (YouTube/Drive)
-      gradient: "from-indigo-500 to-purple-400"
-    },
-    {
-      id: 5,
-      title: "Tutorial del Proyecto",
-      description: "Guía paso a paso sobre el desarrollo y funcionamiento.",
-      icon: "",
-      url: "#", // Reemplaza con el link de tu tutorial
-      gradient: "from-amber-400 to-orange-500"
-    }
-  ];
+/* TikTok mark — not in lucide, drawn as a raw path */
+function TikTokIcon({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M16.6 5.82c-.9-.86-1.46-2.03-1.56-3.32h-3.05v13.6c0 1.5-1.22 2.72-2.72 2.72a2.72 2.72 0 010-5.44c.24 0 .48.03.7.09V10.4a5.78 5.78 0 00-.7-.04A5.77 5.77 0 003 16.13a5.77 5.77 0 0011.53 0V8.9a8.6 8.6 0 004.47 1.25V7.1a5.4 5.4 0 01-2.4-1.28z" />
+    </svg>
+  );
+}
+
+/* ---------- theme tokens (manual light/dark, no build-time config needed) ---------- */
+const THEME = {
+  dark: {
+    bg: '#020304',
+    surface: '#07080C',
+    heading: 'text-white',
+    body: 'text-slate-300',
+    muted: 'text-slate-400',
+    faint: 'text-slate-600',
+    borderSoft: 'border-white/[0.06]',
+    borderMed: 'border-white/10',
+    iconBg: 'bg-white/5',
+    navBg: 'bg-[#020304]/85',
+    dockBg: 'bg-[#07080C]/90',
+    tooltipBg: '#0C0E14',
+    ctaBg: 'bg-white hover:bg-slate-200 text-black',
+    glowA: 'bg-indigo-600/[0.07]',
+    glowB: 'bg-cyan-600/[0.07]',
+    gridLine: 'rgba(255,255,255,0.025)',
+    qrDot: 'E5E7EB',
+    qrBg: '07080C',
+  },
+  light: {
+    bg: '#F6F6F8',
+    surface: '#FFFFFF',
+    heading: 'text-slate-900',
+    body: 'text-slate-700',
+    muted: 'text-slate-500',
+    faint: 'text-slate-500',
+    borderSoft: 'border-black/[0.07]',
+    borderMed: 'border-black/10',
+    iconBg: 'bg-black/[0.04]',
+    navBg: 'bg-[#F6F6F8]/85',
+    dockBg: 'bg-white/90',
+    tooltipBg: '#111318',
+    ctaBg: 'bg-slate-900 hover:bg-slate-800 text-white',
+    glowA: 'bg-indigo-400/[0.12]',
+    glowB: 'bg-cyan-400/[0.12]',
+    gridLine: 'rgba(15,23,42,0.045)',
+    qrDot: '111318',
+    qrBg: 'FFFFFF',
+  },
+};
+
+/* ---------- scroll-reveal helper (no framer-motion available here) ---------- */
+function Reveal({ children, className = '', delay = 0, id }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: '-40px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center py-16 px-4 relative overflow-hidden font-sans">
-      
-      {/* Efectos de luces de fondo (Glow) */}
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-cyan-600/20 rounded-full blur-[100px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+    <div
+      ref={ref}
+      id={id}
+      className={`transition-all duration-700 ease-out motion-reduce:transition-none ${
+        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      } ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
 
-      {/* Encabezado del Perfil */}
-      <div className="relative z-10 flex flex-col items-center mb-12 text-center w-full max-w-2xl">
-        <div className="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-cyan-400 to-indigo-500 mb-6 shadow-[0_0_30px_rgba(34,211,238,0.3)]">
-          <img 
-            src="https://images.unsplash.com/photo-1537432376769-00f5c2f4c8d2?w=400&q=80" // Puedes cambiarla por tu foto real
-            alt="Alexander Perez Scott" 
-            className="w-full h-full rounded-full object-cover border-4 border-slate-950"
-          />
+const SPA_URL = 'https://staymx-sigma.vercel.app';
+const TIKTOK_URL = 'https://www.tiktok.com/@staymx';
+
+const LINKS = [
+  {
+    id: 'portfolio',
+    label: 'PORTAFOLIO',
+    title: 'Portafolio',
+    desc: 'Habilidades en desarrollo frontend y backend, y trayectoria con tecnologías modernas.',
+    cta: 'Ver portafolio',
+    icon: Briefcase,
+    href: '#',
+  },
+  {
+    id: 'spa',
+    label: 'PLATAFORMA',
+    title: 'SPA en vivo',
+    desc: 'La aplicación completa: reservas, conciliación de disponibilidad y panel de gestión.',
+    cta: 'Abrir plataforma',
+    icon: Rocket,
+    href: SPA_URL,
+    external: true,
+  },
+  {
+    id: 'srs',
+    label: 'DOCUMENTACIÓN',
+    title: 'SRS Completo',
+    desc: 'Especificación de Requisitos de Software alojada en SharePoint Sites. Arquitectura y estándares.',
+    cta: 'Leer documento',
+    icon: FileText,
+    href: '#',
+  },
+  {
+    id: 'tutorial',
+    label: 'GUÍA',
+    title: 'Video Tutorial',
+    desc: 'Demostración paso a paso del flujo de la aplicación y la conciliación de bases de datos.',
+    cta: 'Ver demostración',
+    icon: PlayCircle,
+    href: '#',
+  },
+];
+
+export default function App() {
+  const [mode, setMode] = useState('dark');
+  const t = THEME[mode];
+  const isDark = mode === 'dark';
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    if (mq.matches) setMode('light');
+  }, []);
+
+  const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=10&qzone=1&color=${t.qrDot}&bgcolor=${t.qrBg}&data=${encodeURIComponent(
+    SPA_URL
+  )}`;
+
+  const focusRing =
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent';
+
+  return (
+    <div
+      className={`min-h-screen ${t.body} font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden transition-colors duration-300`}
+      style={{ backgroundColor: t.bg }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+        .font-mono-hud { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+        html { scroll-behavior: smooth; }
+        @keyframes scanline {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100%); }
+        }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.25; }
+        }
+        .scanline { position: relative; overflow: hidden; }
+        .scanline::after {
+          content: '';
+          position: absolute;
+          left: 0; right: 0; height: 40%;
+          background: linear-gradient(180deg, transparent, rgba(99,102,241,0.14), transparent);
+          animation: scanline 3.5s linear infinite;
+          pointer-events: none;
+        }
+        .blink-dot { animation: blink 1.6s ease-in-out infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto; }
+          .scanline::after, .blink-dot { animation: none; }
+        }
+      `}</style>
+
+      {/* Skip link — keyboard/screen-reader accessibility */}
+      <a
+        href="#inicio"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-full focus:bg-indigo-500 focus:text-white text-sm font-medium"
+      >
+        Saltar al contenido
+      </a>
+
+      {/* Background layers */}
+      <div
+        className="absolute inset-0 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_40%,transparent_100%)] pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(${t.gridLine} 1px, transparent 1px), linear-gradient(90deg, ${t.gridLine} 1px, transparent 1px)`,
+          backgroundSize: '44px 44px',
+        }}
+      />
+      <div className={`absolute top-[-10%] left-[-10%] w-[600px] h-[600px] ${t.glowA} blur-[150px] rounded-full pointer-events-none`} />
+      <div className={`absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] ${t.glowB} blur-[120px] rounded-full pointer-events-none`} />
+
+      {/* Navbar */}
+      <nav className={`fixed top-0 w-full flex justify-between items-center px-4 sm:px-6 md:px-8 py-3.5 z-50 ${t.navBg} backdrop-blur-md border-b ${t.borderSoft}`}>
+        <div className="flex items-center gap-2.5">
+          <svg className="w-6 h-6 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <span className={`text-base md:text-lg font-bold ${t.heading} tracking-tight`}>StayMX</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2">
-          Alexander Perez Scott
-        </h1>
-        <h2 className="text-lg md:text-xl text-cyan-400 font-medium tracking-wide uppercase bg-cyan-400/10 px-4 py-1.5 rounded-full inline-block">
-          Ingeniería de Software
-        </h2>
-        <p className="mt-4 text-slate-400 text-base max-w-md">
-          Bienvenido a mi central de proyectos. Aquí encontrarás toda la documentación, código y resultados de mi desarrollo.
-        </p>
-      </div>
 
-      {/* Contenedor de los Enlaces */}
-      <div className="relative z-10 w-full max-w-xl flex flex-col gap-5">
-        {links.map((link) => (
-          <a 
-            key={link.id} 
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative flex items-center p-5 rounded-2xl bg-slate-900/50 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-600 transition-all duration-300 backdrop-blur-sm overflow-hidden hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-900/20"
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setMode(isDark ? 'light' : 'dark')}
+            aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            aria-pressed={!isDark}
+            className={`w-11 h-11 flex items-center justify-center rounded-full border ${t.borderMed} ${t.muted} hover:${t.heading} transition-colors touch-manipulation ${focusRing}`}
           >
-            {/* Borde izquierdo de color para cada tarjeta */}
-            <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${link.gradient} opacity-70 group-hover:opacity-100 transition-opacity`}></div>
-            
-            <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl bg-slate-950 border border-slate-800 text-2xl shadow-inner mr-5 group-hover:scale-110 transition-transform duration-300">
-              {link.icon}
-            </div>
-            
-            <div className="flex-1">
-              <h3 className="text-white font-bold text-lg group-hover:text-cyan-300 transition-colors">
-                {link.title}
-              </h3>
-              <p className="text-slate-400 text-sm mt-0.5 line-clamp-2">
-                {link.description}
-              </p>
-            </div>
-            
-            <div className="flex-shrink-0 text-slate-500 group-hover:text-white transition-colors ml-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </div>
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+          <a
+            href={TIKTOK_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="StayMX en TikTok"
+            className={`hidden sm:flex w-11 h-11 items-center justify-center rounded-full border ${t.borderMed} ${t.muted} hover:${t.heading} transition-colors touch-manipulation ${focusRing}`}
+          >
+            <TikTokIcon className="w-4 h-4" />
           </a>
-        ))}
-      </div>
+          <a
+            href={SPA_URL}
+            target="_blank"
+            rel="noreferrer"
+            className={`px-4 sm:px-6 py-2.5 ${t.ctaBg} text-sm font-bold rounded-full transition-colors touch-manipulation ${focusRing}`}
+          >
+            Probar plataforma →
+          </a>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <main id="inicio" className="relative z-10 flex flex-col items-center justify-center min-h-[86vh] px-4 pt-24 text-center scroll-mt-20">
+        <Reveal>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-500/20 bg-indigo-500/[0.06] backdrop-blur-sm mb-8 font-mono-hud">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 blink-dot" />
+            <span className="text-indigo-400 text-xs font-semibold tracking-[0.15em] uppercase">
+              Presentación de Proyecto Final
+            </span>
+          </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <h1 className={`text-4xl sm:text-5xl md:text-7xl font-bold ${t.heading} tracking-tighter leading-[1.1] max-w-4xl mb-6`}>
+            Gestión inteligente de <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">
+              alojamientos web.
+            </span>
+          </h1>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <p className={`text-base sm:text-lg ${t.muted} max-w-2xl font-light leading-relaxed`}>
+            Descubre el desarrollo, la estructura técnica y la ejecución de StayMX. Una Single
+            Page Application diseñada por Alexander Perez Scott.
+          </p>
+        </Reveal>
+      </main>
+
+      {/* QR / linktree hub — signature element */}
+      <section id="acceso-rapido" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pb-8 scroll-mt-24">
+        <Reveal>
+          <div
+            className={`relative overflow-hidden scanline rounded-[2rem] border border-indigo-500/[0.15] p-6 sm:p-8 md:p-10 flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12`}
+            style={{ backgroundColor: t.surface }}
+          >
+            <span className="absolute top-4 left-4 w-4 h-4 border-t border-l border-indigo-400/40 rounded-tl-sm" />
+            <span className="absolute top-4 right-4 w-4 h-4 border-t border-r border-indigo-400/40 rounded-tr-sm" />
+            <span className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-indigo-400/40 rounded-bl-sm" />
+            <span className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-indigo-400/40 rounded-br-sm" />
+
+            <div className={`relative shrink-0 p-3 rounded-2xl ${t.iconBg} border ${t.borderMed}`}>
+              <img
+                src={QR_SRC}
+                alt="Código QR hacia la plataforma StayMX"
+                className="w-36 h-36 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-lg"
+                width={192}
+                height={192}
+                loading="lazy"
+              />
+            </div>
+
+            <div className="text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-3 font-mono-hud text-cyan-400 text-xs tracking-[0.15em] uppercase">
+                <QrCode className="w-3.5 h-3.5" />
+                Acceso rápido
+              </div>
+              <h2 className={`text-xl sm:text-2xl md:text-3xl font-bold ${t.heading} tracking-tight mb-3`}>
+                Escanea y entra directo a la plataforma
+              </h2>
+              <p className={`${t.muted} mb-4 max-w-md`}>
+                Este código apunta a la SPA en vivo. Los enlaces al portafolio, la
+                documentación técnica y el video testimonial están reunidos abajo.
+              </p>
+              <div className={`font-mono-hud text-[11px] ${t.faint} tracking-wider uppercase`}>
+                enlace_activo <span className="text-emerald-400">●</span> staymx.landing // v2.1
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Link grid */}
+      <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <Reveal className="text-center mb-12 sm:mb-14">
+          <h2 className={`text-2xl sm:text-3xl md:text-5xl font-bold ${t.heading} tracking-tight mb-4`}>
+            El proceso de creación
+          </h2>
+          <p className={t.muted}>Documentación técnica, testimonios y recursos del desarrollo.</p>
+        </Reveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 auto-rows-[minmax(220px,auto)]">
+          <div className="flex flex-col gap-5 sm:gap-6">
+            {[LINKS[0], LINKS[1]].map((item, i) => (
+              <Reveal key={item.id} delay={i * 100} className="flex-1">
+                <LinkCard item={item} t={t} focusRing={focusRing} />
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal className="md:row-span-2">
+            <a
+              href="#"
+              className={`group relative rounded-[2rem] border ${t.borderSoft} overflow-hidden h-[440px] sm:h-[520px] md:h-full flex flex-col justify-between p-6 sm:p-8 touch-manipulation ${focusRing}`}
+              style={{ backgroundColor: t.surface }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
+              <img
+                src="https://images.unsplash.com/photo-1618042164219-62c820f10723?q=80&w=1000&auto=format&fit=crop"
+                alt="Fondo video testimonial"
+                className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-35 transition-opacity duration-500"
+                loading="lazy"
+              />
+
+              <div className="relative z-20 flex items-center gap-3 font-mono-hud">
+                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center">
+                  <Play className="w-3.5 h-3.5 text-white fill-white" />
+                </div>
+                <span className="text-white text-xs tracking-[0.15em] uppercase drop-shadow-md">
+                  Video Testimonial
+                </span>
+              </div>
+
+              <div className="relative z-20">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 drop-shadow-lg">
+                  ¿Por qué es vital la toma correcta de requerimientos?
+                </h3>
+                <p className="text-slate-300 text-sm mb-6 drop-shadow-md">
+                  Un análisis sobre cómo la correcta extracción de datos previene pérdidas
+                  silenciosas y asegura la viabilidad técnica.
+                </p>
+                <span className="w-full inline-flex items-center justify-center gap-2 py-4 bg-white/10 group-hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold rounded-2xl transition-colors">
+                  <Play className="w-4 h-4 text-red-500 fill-red-500" />
+                  Reproducir
+                </span>
+              </div>
+            </a>
+          </Reveal>
+
+          <div className="flex flex-col gap-5 sm:gap-6">
+            {[LINKS[2], LINKS[3]].map((item, i) => (
+              <Reveal key={item.id} delay={i * 100} className="flex-1">
+                <LinkCard item={item} t={t} focusRing={focusRing} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
-      <div className="relative z-10 mt-16 text-slate-500 text-sm font-medium">
-        © {new Date().getFullYear()} • Escárcega, Campeche
-      </div>
+      <footer className={`relative z-10 border-t ${t.borderSoft} py-10 text-center font-mono-hud`}>
+        <p className={`text-xs ${t.faint} tracking-widest uppercase px-4`}>
+          © 2026 Alexander Perez Scott • Ingeniería de Software
+        </p>
+        <a
+          href={TIKTOK_URL}
+          target="_blank"
+          rel="noreferrer"
+          className={`sm:hidden mt-4 inline-flex items-center gap-2 text-xs ${t.muted} ${focusRing} rounded-full px-3 py-2`}
+        >
+          <TikTokIcon className="w-3.5 h-3.5" />
+          @staymx en TikTok
+        </a>
+      </footer>
+
     </div>
+  );
+}
+
+function LinkCard({ item, t, focusRing }) {
+  const Icon = item.icon;
+  return (
+    <a
+      id={item.id}
+      href={item.href}
+      target={item.external ? '_blank' : undefined}
+      rel={item.external ? 'noreferrer' : undefined}
+      className={`group h-full flex flex-col p-6 sm:p-7 rounded-[2rem] border ${t.borderSoft} hover:border-indigo-500/30 transition-all duration-300 scroll-mt-24 touch-manipulation ${focusRing}`}
+      style={{ backgroundColor: t.surface }}
+    >
+      <div className="flex items-center justify-between mb-5 sm:mb-6">
+        <div className={`w-10 h-10 rounded-full ${t.iconBg} border ${t.borderMed} flex items-center justify-center ${t.heading} group-hover:scale-110 group-hover:text-indigo-400 transition-all`}>
+          <Icon className="w-5 h-5" />
+        </div>
+        <span className={`font-mono-hud text-[10px] tracking-[0.15em] ${t.faint} group-hover:text-indigo-400/70 transition-colors`}>
+          {item.label}
+        </span>
+      </div>
+      <h3 className={`text-lg sm:text-xl font-bold ${t.heading} mb-2`}>{item.title}</h3>
+      <p className={`text-sm ${t.muted} mb-6 flex-1`}>{item.desc}</p>
+      <span className="inline-flex items-center gap-1 text-indigo-400 text-sm font-medium">
+        {item.cta}
+        <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+      </span>
+    </a>
   );
 }
