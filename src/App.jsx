@@ -100,7 +100,7 @@ function Reveal({ children, className = '', delay = 0, id }) {
 }
 
 const SPA_URL = 'https://staymx-sigma.vercel.app';
-const TIKTOK_URL = 'https://www.tiktok.com/@staymx';
+const TIKTOK_URL = 'https://www.tiktok.com/@staymx6?_r=1&_t=ZS-98cNqQdpnwf';
 
 const LINKS = [
   {
