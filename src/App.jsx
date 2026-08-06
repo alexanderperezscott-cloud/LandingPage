@@ -151,7 +151,7 @@ const LINKS = [
     desc: 'Análisis sobre cómo la correcta extracción de datos previene pérdidas y asegura viabilidad técnica.',
     cta: 'Ver testimonio',
     icon: Play,
-    href: 'https://youtube.com/shorts/roMMgSlDiBM?feature=share',
+    href: '',
     external: true,
   },
 ];
