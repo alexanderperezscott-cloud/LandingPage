@@ -20,7 +20,7 @@ function TikTokIcon({ className }) {
   );
 }
 
-/* ---------- theme tokens (manual light/dark, no build-time config needed) ---------- */
+/* ---------- theme tokens ---------- */
 const THEME = {
   dark: {
     bg: '#020304',
@@ -64,7 +64,7 @@ const THEME = {
   },
 };
 
-/* ---------- scroll-reveal helper (no framer-motion available here) ---------- */
+/* ---------- scroll-reveal helper ---------- */
 function Reveal({ children, className = '', delay = 0, id }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -102,6 +102,7 @@ function Reveal({ children, className = '', delay = 0, id }) {
 const SPA_URL = 'https://staymx-sigma.vercel.app';
 const TIKTOK_URL = 'https://www.tiktok.com/@staymx6?_r=1&_t=ZS-98cNqQdpnwf';
 
+// Todos los enlaces ahora usan el mismo formato de tarjeta para mantener el diseño consistente
 const LINKS = [
   {
     id: 'portfolio',
@@ -110,7 +111,7 @@ const LINKS = [
     desc: 'Habilidades en desarrollo frontend y backend, y trayectoria con tecnologías modernas.',
     cta: 'Ver portafolio',
     icon: Briefcase,
-    href: 'https://portafolio-lime-iota.vercel.app', // <-- Enlace añadido aquí
+    href: 'https://portafolio-lime-iota.vercel.app',
     external: true,
   },
   {
@@ -130,7 +131,8 @@ const LINKS = [
     desc: 'Especificación de Requisitos de Software alojada en SharePoint Sites. Arquitectura y estándares.',
     cta: 'Leer documento',
     icon: FileText,
-    href: '#',
+    href: 'https://staymxsrs-five.vercel.app',
+    external: true,
   },
   {
     id: 'tutorial',
@@ -139,7 +141,18 @@ const LINKS = [
     desc: 'Demostración paso a paso del flujo de la aplicación y la conciliación de bases de datos.',
     cta: 'Ver demostración',
     icon: PlayCircle,
-    href: '#',
+    href: 'https://youtu.be/ZOgfurnPx3c',
+    external: true,
+  },
+  {
+    id: 'testimonial',
+    label: 'TESTIMONIO',
+    title: 'Video Testimonial',
+    desc: 'Análisis sobre cómo la correcta extracción de datos previene pérdidas y asegura viabilidad técnica.',
+    cta: 'Ver testimonio',
+    icon: Play,
+    href: 'https://youtube.com/shorts/roMMgSlDiBM?feature=share',
+    external: true,
   },
 ];
 
@@ -325,7 +338,7 @@ export default function App() {
         </Reveal>
       </section>
 
-      {/* Link grid (Ahora SEPARADO y estructurado de forma espaciada) */}
+      {/* Grid unificado con todos los links al estilo tarjeta (como en la imagen solicitada) */}
       <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <Reveal className="text-center mb-12 sm:mb-14">
           <h2 className={`text-2xl sm:text-3xl md:text-5xl font-bold ${t.heading} tracking-tight mb-4`}>
@@ -334,68 +347,12 @@ export default function App() {
           <p className={t.muted}>Documentación técnica, testimonios y recursos del desarrollo.</p>
         </Reveal>
 
-        <div className="flex flex-col gap-10 sm:gap-14">
-          
-          {/* Parte 1: Proyectos - Portafolio y SPA */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 auto-rows-[minmax(220px,auto)]">
-            {[LINKS[0], LINKS[1]].map((item, i) => (
-              <Reveal key={item.id} delay={i * 100}>
-                <LinkCard item={item} t={t} focusRing={focusRing} />
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Parte 2: Video Testimonial - Separado como un banner central */}
-          <Reveal delay={200}>
-            <a
-              href="#"
-              className={`group relative rounded-[2rem] border ${t.borderSoft} overflow-hidden flex flex-col justify-end p-8 sm:p-12 min-h-[350px] md:min-h-[420px] touch-manipulation ${focusRing} transition-all duration-300 hover:border-indigo-500/50`}
-              style={{ backgroundColor: t.surface }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none" />
-              <img
-                src="https://images.unsplash.com/photo-1618042164219-62c820f10723?q=80&w=1000&auto=format&fit=crop"
-                alt="Fondo video testimonial"
-                className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500"
-                loading="lazy"
-              />
-
-              <div className="relative z-20 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="max-w-2xl">
-                  <div className="flex items-center gap-3 font-mono-hud mb-4">
-                    <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center">
-                      <Play className="w-4 h-4 text-white fill-white" />
-                    </div>
-                    <span className="text-white text-xs tracking-[0.2em] uppercase drop-shadow-md">
-                      Video Testimonial
-                    </span>
-                  </div>
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 drop-shadow-lg leading-tight">
-                    ¿Por qué es vital la toma correcta de requerimientos?
-                  </h3>
-                  <p className="text-slate-300 text-sm sm:text-base drop-shadow-md max-w-xl">
-                    Un análisis sobre cómo la correcta extracción de datos previene pérdidas
-                    silenciosas y asegura la viabilidad técnica.
-                  </p>
-                </div>
-                
-                <span className="shrink-0 w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 bg-white/10 group-hover:bg-indigo-600 backdrop-blur-md border border-white/20 text-white font-bold rounded-2xl transition-all duration-300">
-                  <Play className="w-4 h-4 text-white fill-white group-hover:text-white" />
-                  Reproducir Video
-                </span>
-              </div>
-            </a>
-          </Reveal>
-
-          {/* Parte 3: Documentación - SRS y Video Tutorial */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 auto-rows-[minmax(220px,auto)]">
-            {[LINKS[2], LINKS[3]].map((item, i) => (
-              <Reveal key={item.id} delay={i * 100}>
-                <LinkCard item={item} t={t} focusRing={focusRing} />
-              </Reveal>
-            ))}
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 auto-rows-[minmax(220px,auto)]">
+          {LINKS.map((item, i) => (
+            <Reveal key={item.id} delay={i * 100}>
+              <LinkCard item={item} t={t} focusRing={focusRing} />
+            </Reveal>
+          ))}
         </div>
       </section>
 
