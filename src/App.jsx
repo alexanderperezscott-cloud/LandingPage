@@ -151,7 +151,7 @@ const LINKS = [
     desc: 'Análisis sobre cómo la correcta extracción de datos previene pérdidas y asegura viabilidad técnica.',
     cta: 'Ver testimonio',
     icon: Play,
-    href: '',
+    href: 'https://youtu.be/H7lcS-Mw_og',
     external: true,
   },
 ];
@@ -167,8 +167,14 @@ export default function App() {
     if (mq.matches) setMode('light');
   }, []);
 
+  const testimonialLink = (LINKS.find((l) => l.id === 'testimonial') || {}).href || SPA_URL;
+
   const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=10&qzone=1&color=${t.qrDot}&bgcolor=${t.qrBg}&data=${encodeURIComponent(
     SPA_URL
+  )}`;
+
+  const QR_TESTIMONIAL_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=10&qzone=1&color=${t.qrDot}&bgcolor=${t.qrBg}&data=${encodeURIComponent(
+    testimonialLink
   )}`;
 
   const focusRing =
@@ -308,14 +314,33 @@ export default function App() {
             <span className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-indigo-400/40 rounded-br-sm" />
 
             <div className={`relative shrink-0 p-3 rounded-2xl ${t.iconBg} border ${t.borderMed}`}>
-              <img
-                src={QR_SRC}
-                alt="Código QR hacia la plataforma StayMX"
-                className="w-36 h-36 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-lg"
-                width={192}
-                height={192}
-                loading="lazy"
-              />
+              <a
+                href={QR_TESTIMONIAL_SRC}
+                download="staymx-testimonial-qr.png"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Descargar QR del testimonio"
+              >
+                <img
+                  src={QR_SRC}
+                  alt="Código QR hacia la plataforma StayMX"
+                  className="w-36 h-36 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-lg"
+                  width={192}
+                  height={192}
+                  decoding="async"
+                  loading="eager"
+                  crossOrigin="anonymous"
+                />
+              </a>
+              <div className="mt-2 text-center">
+                <a
+                  href={QR_TESTIMONIAL_SRC}
+                  download="staymx-testimonial-qr.png"
+                  className="inline-block px-3 py-1 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-500"
+                >
+                  Staymx
+                </a>
+              </div>
             </div>
 
             <div className="text-center md:text-left">
